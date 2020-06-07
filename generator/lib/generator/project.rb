@@ -6,29 +6,26 @@ def add_files_to_project(path, json_path)
     json = JSON.parse File.read(json_path)
     project = Xcodeproj::Project.open(path)
     target = get_target(project, production)
-    
+
     group_path = get_group_name(production)
     uikit_group = project.main_group.find_subpath(group_path, true)
     uikit_group.clear
+    uikit_group.set_source_tree('SOURCE_ROOT')
     clear_target(target)
 
-    json.each do |group, files|
-        new_group = project.main_group.find_subpath(File.join(group_path, group), true)
-        new_group.set_source_tree('SOURCE_ROOT')
-        file_refs = []
-        files.each do |f|
-            unless new_group.find_file_by_path(f) 
-                file_ref = new_group.new_reference(f)
-                file_refs << file_ref
-            end
+    file_refs = []
+    json.each do |f|
+        unless uikit_group.find_file_by_path(f)
+            file_ref = uikit_group.new_reference(f)
+            file_refs << file_ref
         end
-        file_refs.each do |file_ref|
-            target.add_file_references([file_ref])
-        end
-        
     end
+
+    target.add_file_references(file_refs)
+
     project.save
 end
+
 
 def get_target(project, production)
     if production
@@ -52,7 +49,8 @@ def get_group_name(production)
 end
 
 def should_remove(file_name)
-    /UI[a-zA-Z]+\+(?:[a-zA-Z]+?Color|NightVersion)\.[hm]/.match(file_name)
+    return false if file_name.match('UIButton') or file_name.match('UIImageView')
+    /UI[a-zA-Z]+\+(?:[a-zA-Z]+?|Night)\.[hm]/.match(file_name)
 end
 
 def clear_target(target)

@@ -17,6 +17,8 @@ DerivedData
 *.ipa
 *.xcuserstate
 
+fastlane/report.xml
+
 # CocoaPods
 #
 # We recommend against adding the Pods directory to your .gitignore. However
@@ -24,3 +26,5 @@ DerivedData
 # http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
 #
 #Pods/
+
+.DS_Store

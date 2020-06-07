@@ -1,6 +1,6 @@
 //
-//  <%= klass.name %>+<%= property.cap_name %>.h
-//  <%= klass.name %>+<%= property.cap_name %>
+//  <%= klass.name %>+Night.h
+//  <%= klass.name %>+Night
 //
 //  Copyright (c) 2015 Draveness. All rights reserved.
 //
@@ -9,17 +9,9 @@
 //  test it. And finally open a pull request.
 
 #import <UIKit/UIKit.h>
+#import "NSObject+Night.h"
 
-@interface <%= klass.name %> (<%= property.cap_name %>)
+@interface <%= klass.name %> (Night)
 
-/**
- * Set this property when switch to night version <%= klass.name.downcase %> <%= property.cap_name %> turns to this color.
- */
-@property (nonatomic, strong) UIColor *night<%= property.cap_name %>;
-
-/**
- *  <%= klass.name %> <%= property.cap_name %> in normal version.
- */
-@property (nonatomic, strong, readonly) UIColor *normal<%= property.cap_name %>;
-
+<% klass.properties.each do |property| %><%= "@property (nonatomic, copy, setter = dk_set#{property.cap_name}Picker:) DKColorPicker dk_#{property.name}Picker;\n"%><% end %>
 @end
